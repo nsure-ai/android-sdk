@@ -19,7 +19,7 @@ implementation 'com.github.nsure-ai:android-sdk:main-SNAPSHOT'
 Initialize nSure with app context:
 
 ```java
-NSure nSure = NSure.getInstance(this.getApplicationContext(), "SAMPLE_ANDROID_APP_ID");
+NSure nSure = NSure.getInstance(this.getApplicationContext(), "PARTNER_ID", "SAMPLE_ANDROID_APP_ID");
 ```
 
 ### Step 3: Retrieve device id from the sdk
