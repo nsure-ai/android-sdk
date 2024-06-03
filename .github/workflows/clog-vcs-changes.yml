@@ -1,0 +1,25 @@
+name: Captains Log VCS changes
+on:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  captains-log-vcs:
+    runs-on: ubuntu-20.04
+    steps:      
+      - name: Checkout github-actions-workflows
+        uses: actions/checkout@v3
+        with:
+          repository: nsure-ai/github-actions-workflows
+          token: ${{ secrets.GH_TOKEN_NSURE_DEVOPS }}
+      
+      - name: Run remote action
+        uses: ./captains-log-vcs
+        with:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          NPM_REGISTRY_TOKEN: ${{ secrets.NPM_REGISTRY_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN_NSURE_DEVOPS }}
+          SLACK_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN }}
+  
