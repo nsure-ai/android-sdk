@@ -13,7 +13,7 @@ allprojects {
 Add the dependency
 
 ```gradle
-implementation 'com.github.nsure-ai:android-sdk:1.3.2'
+implementation 'com.github.nsure-ai:android-sdk:1.3.3'
 ```
 ### Step 2: Initialize
 Initialize nSure with app context:
