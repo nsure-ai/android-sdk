@@ -6,7 +6,7 @@ on:
       - master
 jobs:
   captains-log-vcs:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:      
       - name: Checkout github-actions-workflows
         uses: actions/checkout@v3
