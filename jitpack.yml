@@ -21,4 +21,4 @@ dependencies:
     artifact: pro
     version: 2.8.0
 install:
-  - mvn install:install-file -Dfile=nsure.aar -DgroupId=com.nsure -DartifactId=nsure -Dversion=$VERSION -Dpackaging=aar
+  - mvn install:install-file -Dfile=nsure.aar -DpomFile=pom.xml -Dversion=$VERSION -Dpackaging=aar
