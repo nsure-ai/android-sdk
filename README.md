@@ -15,7 +15,7 @@ allprojects {
 Add the dependencies:
 
 ```gradle
-implementation 'com.github.nsure-ai:android-sdk:1.3.13'
+implementation 'com.github.nsure-ai:android-sdk:1.4.0'
 implementation 'com.fingerprint.android:pro:2.8.0'
 ```
 
