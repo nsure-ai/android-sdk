@@ -1,0 +1,129 @@
+name: Release
+
+# Merging a release/<VERSION> PR is the release button: the internal repo
+# opens that PR with nsure.aar + pom.xml committed; merging it when clients
+# are ready triggers the tag + GitHub Release here. JitPack lazy-builds the
+# tag on first consumer request (jitpack.yml installs with -Dversion=$VERSION,
+# so no per-release file patching is needed).
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.4.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       startsWith(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.event.repository.default_branch }}
+
+      - name: Resolve version
+        id: version
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_HEAD_REF#release/}"
+          fi
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(rc|beta|alpha)\.[0-9]+)?$ ]]; then
+            echo "::error::Invalid version '${VERSION}'"
+            exit 1
+          fi
+          if [ ! -f nsure.aar ]; then
+            echo "::error::nsure.aar not found on ${{ github.event.repository.default_branch }}; refusing to release."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Tag and create GitHub Release
+        id: publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          SRC_PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "${VERSION}" >/dev/null 2>&1; then
+            echo "Release ${VERSION} already exists; skipping (idempotent re-run)"
+            echo "outcome=already-released" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Tag without release = prior run crashed between tag push and release create; reuse it.
+          if git ls-remote --exit-code --tags origin "refs/tags/${VERSION}" >/dev/null 2>&1; then
+            echo "Tag ${VERSION} already exists; reusing to recover partial run"
+          else
+            git tag "${VERSION}"
+            git push origin "${VERSION}"
+          fi
+
+          NOTES="See [release PR](${SRC_PR_URL:-https://github.com/nsure-ai/android-sdk/releases}) for the changelog. JitPack will build this tag on first consumer request."
+          gh release create "${VERSION}" \
+            --target "${{ github.event.repository.default_branch }}" \
+            --title "${VERSION}" \
+            --notes "${NOTES}" \
+            nsure.aar
+
+          echo "outcome=published" >> "$GITHUB_OUTPUT"
+          echo "Published ${VERSION}"
+
+      - name: Compose Slack message
+        if: always()
+        id: slack-msg
+        env:
+          JOB_STATUS: ${{ job.status }}
+          OUTCOME: ${{ steps.publish.outputs.outcome }}
+          VERSION: ${{ steps.version.outputs.version }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          RELEASE_URL="https://github.com/nsure-ai/android-sdk/releases/tag/${VERSION}"
+          if [ "$JOB_STATUS" = "success" ]; then
+            case "${OUTCOME:-published}" in
+              already-released)
+                MSG="✅ Android already released · ${VERSION} · <${RELEASE_URL}|android-sdk> · idempotent re-run"
+                ;;
+              published|*)
+                MSG="🚀 Android published · ${VERSION} · <${RELEASE_URL}|android-sdk> · JitPack will build on first consumer request"
+                ;;
+            esac
+          else
+            MSG="❌ Android release failed · ${VERSION:-?} · <${RUN_URL}|logs>"
+          fi
+          {
+            echo "text<<EOF"
+            echo "$MSG"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Notify Slack
+        if: always()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN }}
+          payload: |
+            {
+              "channel": "C0B37THK9FY",
+              "text": ${{ toJSON(steps.slack-msg.outputs.text) }}
+            }
