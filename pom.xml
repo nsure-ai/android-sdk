@@ -6,7 +6,9 @@
    <modelVersion>4.0.0</modelVersion>
   <groupId>com.nsure</groupId>
   <artifactId>nsure</artifactId>
-  <version>1.3.17</version>
+  <version>1.3.18</version>
+  <!-- Required; Maven defaults to jar and consumers then resolve a jar we never publish. -->
+  <packaging>aar</packaging>
   <dependencies>
       <dependency>
         <groupId>androidx.appcompat</groupId>
