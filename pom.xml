@@ -7,6 +7,8 @@
   <groupId>com.nsure</groupId>
   <artifactId>nsure</artifactId>
   <version>1.4.0</version>
+  <!-- Required; Maven defaults to jar and consumers then resolve a jar we never publish. -->
+  <packaging>aar</packaging>
   <dependencies>
       <dependency>
         <groupId>androidx.appcompat</groupId>
