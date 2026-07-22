@@ -21,5 +21,6 @@ dependencies:
     artifact: pro
     version: 2.8.0
 install:
-  - FILE="-Dfile=nsure-1.4.0.aar"
-  - mvn install:install-file $FILE -DgroupId=com.nsure -DartifactId=nsure -Dversion=1.4.0 -Dpackaging=aar
+  # Explicit coordinates, not -DpomFile: install-file generates the POM so
+  # -Dpackaging=aar reaches it. -DpomFile installs verbatim, packaging becomes jar.
+  - mvn install:install-file -Dfile=nsure.aar -DgroupId=com.nsure -DartifactId=nsure -Dversion=$VERSION -Dpackaging=aar
