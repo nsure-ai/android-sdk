@@ -8,7 +8,7 @@
   <artifactId>nsure</artifactId>
   <!-- No packaging element: Maven rejects aar here and the build fails.
        The published POM gets it from -Dpackaging in jitpack.yml. -->
-  <version>1.3.18</version>
+  <version>1.4.0</version>
   <dependencies>
       <dependency>
         <groupId>androidx.appcompat</groupId>
