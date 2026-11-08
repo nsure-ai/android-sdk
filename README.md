@@ -63,7 +63,7 @@ NSure nSure = NSure.getInstance(this.getApplicationContext(),
 * **configBaseUrl**  
   An optional base URL used for DNS cloaking. This value will be provided by nSure.ai when applicable. If no value is provided, set this to `null`.
 * **eventsReportUrl**  
-  An optional base URL that overrides the default events reporting endpoint. This value will be provided by nSure.ai when applicable. If no value is provided, set this to `null`.
+  Optional base URL that overrides the default events reporting endpoint.
 
 ---
 
