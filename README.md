@@ -46,7 +46,24 @@ NSure nSure = NSure.getInstance(this.getApplicationContext(),
                                 "SAMPLE_ANDROID_APP_ID",
                                 "PARTNER_ID",
                                 "https://custom-config-url.com");
+
+// Optionally also specify a custom events reporting URL
+NSure nSure = NSure.getInstance(this.getApplicationContext(),
+                                "SAMPLE_ANDROID_APP_ID",
+                                "PARTNER_ID",
+                                "https://custom-config-url.com",
+                                "https://custom-events-url.com");
 ```
+#### Initialization Parameters:
+
+* **appID**  
+  The application identifier provided by nSure.ai.
+* **partnerID**  
+  The partner identifier provided by nSure.ai. If no partner ID is provided, set this value to `null`.
+* **configBaseUrl**  
+  An optional base URL used for DNS cloaking. This value will be provided by nSure.ai when applicable. If no value is provided, set this to `null`.
+* **eventsReportUrl**  
+  An optional base URL that overrides the default events reporting endpoint. This value will be provided by nSure.ai when applicable. If no value is provided, set this to `null`.
 
 ---
 
