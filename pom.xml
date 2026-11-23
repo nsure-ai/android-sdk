@@ -13,7 +13,7 @@
       <dependency>
         <groupId>androidx.appcompat</groupId>
         <artifactId>appcompat</artifactId>
-        <version>1.7.0</version>
+        <version>1.8.0</version>
       </dependency>
       <dependency>
         <groupId>com.android.volley</groupId>
@@ -23,36 +23,13 @@
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>2.10.1</version>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-api</artifactId>
-        <version>0.10.7</version>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-impl</artifactId>
-        <version>0.10.7</version>
-        <scope>runtime</scope>
+        <version>2.15.0</version>
       </dependency>
       <dependency>
         <groupId>com.fingerprint.android</groupId>
         <artifactId>sdk</artifactId>
-        <version>4.0.0</version>
+        <version>4.3.0</version>
         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-orgjson</artifactId>
-        <version>0.10.7</version>
-        <scope>runtime</scope>
-        <exclusions>
-          <exclusion>
-            <artifactId>json</artifactId>
-            <groupId>org.json</groupId>
-          </exclusion>
-        </exclusions>
       </dependency>
     </dependencies>
 </project>
