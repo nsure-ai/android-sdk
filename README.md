@@ -1,5 +1,11 @@
 # Android
 
+### Requirements
+
+* Android 6.0 (API level 23) or later
+* `compileSdk` 34 or later
+* Android Gradle Plugin 8.1.1 or later
+
 ### Step 1: Add nSure SDK to your app
 
 Add it in your root **build.gradle** at the end of `repositories`:
@@ -8,6 +14,7 @@ Add it in your root **build.gradle** at the end of `repositories`:
 allprojects {
   repositories {
     maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.fpregistry.io/releases' }
   }
 }
 ```
@@ -15,9 +22,14 @@ allprojects {
 Add the dependencies:
 
 ```gradle
-implementation 'com.github.nsure-ai:android-sdk:1.4.3'
-implementation 'com.fingerprint.android:sdk:4.0.0'
+implementation 'com.github.nsure-ai:android-sdk:1.5.0'
+implementation 'com.fingerprint.android:sdk:4.3.0'
+implementation 'com.android.volley:volley:1.2.1'
+implementation 'com.google.code.gson:gson:2.15.0'
+implementation 'androidx.appcompat:appcompat:1.8.0'
 ```
+
+The SDK does not pull these libraries in transitively, so all five lines are required.
 
 ---
 
